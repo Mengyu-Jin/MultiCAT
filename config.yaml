@@ -1,0 +1,62 @@
+# Catalysis Chapter 1 - DOI search configuration
+# Mirrors the approach used in E:\Project\Battery\config.yaml + scripts\fetch_dois_scopus.py
+
+paths:
+  registry: "registry/paper_registry.csv"
+
+elsevier:
+  api_key: ""  # set ELSEVIER_API_KEY in .env or environment
+  search_url: "https://api.elsevier.com/content/search/scopus"
+  abstract_url: "https://api.elsevier.com/content/abstract/doi"
+  rate_limit_per_second: 6
+
+# === Scopus search: biomass carbohydrate heterogeneous catalysis ===
+scopus:
+  # Substrate query, mirrors the project spec's keep conditions and the
+  # biomass-catalysis search-keyword reference (model compounds + real biomass)
+  query_substrate: >-
+    glucose OR fructose OR xylose OR mannose OR galactose OR arabinose
+    OR sucrose OR cellobiose OR maltose OR lactose
+    OR cellulose OR hemicellulose OR xylan OR starch OR inulin
+    OR "real biomass" OR "lignocellulosic biomass" OR "corn stover"
+    OR "wheat straw" OR "rice straw" OR bagasse OR "rice husk"
+    OR sawdust OR switchgrass
+
+  # Catalyst query: heterogeneous solid acid/base systems only
+  query_catalyst: >-
+    "heterogeneous catalyst" OR zeolite OR "metal oxide" OR "solid acid"
+    OR "ion-exchange resin" OR "metal-organic framework" OR MOF
+    OR "carbon-based catalyst" OR "supported catalyst" OR "solid base"
+
+  # Target product query, mirrors the project spec's keep product scope
+  query_product: >-
+    "lactic acid" OR "5-hydroxymethylfurfural" OR HMF OR furfural
+    OR "levulinic acid" OR "formic acid" OR "acetic acid" OR "glycolic acid"
+
+  # Experimental performance evidence terms
+  query_experimental: >-
+    conversion OR yield OR selectivity OR "product distribution"
+
+  # Exclusions, mirrors the project spec's skip conditions
+  query_exclude_fermentation: >-
+    fermentation OR enzymatic OR microbial OR enzyme OR yeast OR bacteria
+
+  query_exclude_polyol: >-
+    glycerol OR sorbitol OR xylitol OR polyol OR mannitol
+
+  query_exclude_downstream: >-
+    hydrogenation OR hydrogenolysis OR hydrodeoxygenation OR FDCA
+    OR DMF OR GVL OR "acrylic acid" OR lactide OR biodiesel
+    OR transesterification OR "lignin-to-aromatics"
+
+  query_exclude_other_energy: >-
+    electrocatalysis OR photocatalysis OR battery OR "fuel cell"
+
+  # Added 2026-06-16 after observing P000014 (flash pyrolysis paper)
+  # slip through screening: this project only covers liquid-phase or
+  # near-critical aqueous-phase heterogeneous catalysis, not gas-phase
+  # thermochemical conversion.
+  query_exclude_thermochemical: >-
+    pyrolysis OR gasification OR torrefaction OR "flash pyrolysis"
+
+  query_exclude_review: '"review" OR "survey" OR "recent advances" OR "recent progress"'

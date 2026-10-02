@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MultiCat Extraction Schema",
+  "type": "object",
+  "required": ["paper", "catalysts", "reactions", "extraction_meta"],
+  "additionalProperties": false,
+  "properties": {
+    "paper": {
+      "type": "object",
+      "required": ["paper_id", "doi", "title", "journal", "year", "publisher", "xml_source"],
+      "additionalProperties": false,
+      "properties": {
+        "paper_id": {"type": ["string", "null"]},
+        "doi": {"type": ["string", "null"]},
+        "title": {"type": ["string", "null"]},
+        "journal": {"type": ["string", "null"]},
+        "year": {"type": ["integer", "string", "null"]},
+        "publisher": {"type": ["string", "null"]},
+        "xml_source": {
+          "type": ["string", "null"],
+          "enum": ["elsevier", "pmc", "springer", "unknown", null]
+        }
+      }
+    },
+    "catalysts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/catalyst"}
+    },
+    "reactions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/reaction"}
+    },
+    "extraction_meta": {
+      "type": "object",
+      "required": ["schema_version", "status", "notes"],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": {"type": "string", "const": "v1"},
+        "status": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]}
+      }
+    }
+  },
+  "$defs": {
+    "numberOrNull": {"type": ["number", "integer", "null"]},
+    "stringOrNull": {"type": ["string", "null"]},
+    "catalyst": {
+      "type": "object",
+      "required": [
+        "catalyst_id",
+        "catalyst_name",
+        "support_status",
+        "support_class",
+        "unsupported_class",
+        "composition_raw",
+        "metals",
+        "synthesis",
+        "characterization",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "catalyst_id": {"$ref": "#/$defs/stringOrNull"},
+        "catalyst_name": {"$ref": "#/$defs/stringOrNull"},
+        "support_status": {
+          "type": ["string", "null"],
+          "enum": ["supported", "unsupported", "unknown", null]
+        },
+        "support_class": {
+          "type": ["string", "null"],
+          "enum": [
+            "oxide",
+            "zeolite_silica",
+            "carbon",
+            "polymer_resin",
+            "mof",
+            "mineral_clay",
+            "others",
+            "none",
+            null
+          ]
+        },
+        "unsupported_class": {
+          "type": ["string", "null"],
+          "enum": [
+            "metal_oxide",
+            "zeolite_silica",
+            "carbon",
+            "polymer_resin",
+            "mof",
+            "heteropoly_acid_solid",
+            "mineral_clay",
+            "others",
+            "none",
+            null
+          ]
+        },
+        "composition_raw": {"$ref": "#/$defs/stringOrNull"},
+        "metals": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/metal"}
+        },
+        "synthesis": {"$ref": "#/$defs/synthesis"},
+        "characterization": {"$ref": "#/$defs/characterization"},
+        "evidence": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "metal": {
+      "type": "object",
+      "required": ["element", "content_value", "content_unit", "content_label", "role", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "element": {"$ref": "#/$defs/stringOrNull"},
+        "content_value": {"$ref": "#/$defs/numberOrNull"},
+        "content_unit": {"$ref": "#/$defs/stringOrNull"},
+        "content_label": {"$ref": "#/$defs/stringOrNull"},
+        "role": {
+          "type": ["string", "null"],
+          "enum": ["active", "promoter", "support_framework", "unknown", null]
+        },
+        "evidence": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "synthesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "synthesis_method": {
+          "type": ["string", "null"],
+          "enum": [
+            "impregnation",
+            "hydrothermal",
+            "solvothermal",
+            "sol_gel",
+            "precipitation",
+            "co_precipitation",
+            "ion_exchange",
+            "grafting",
+            "sulfonation",
+            "carbonization",
+            "calcination",
+            "commercial",
+            "mechanical_mixing",
+            "others",
+            "unknown",
+            null
+          ]
+        },
+        "modification_method": {
+          "type": ["string", "null"],
+          "enum": [
+            "impregnation",
+            "ion_exchange",
+            "grafting",
+            "sulfonation",
+            "acid_treatment",
+            "base_treatment",
+            "metal_doping",
+            "calcination",
+            "reduction",
+            "oxidation",
+            "carbonization",
+            "others",
+            "none",
+            "unknown",
+            null
+          ]
+        },
+        "calcination_temp": {"$ref": "#/$defs/numberOrNull"},
+        "calcination_temp_unit": {"$ref": "#/$defs/stringOrNull"},
+        "calcination_time": {"$ref": "#/$defs/numberOrNull"},
+        "calcination_time_unit": {"$ref": "#/$defs/stringOrNull"},
+        "hydrothermal_temp": {"$ref": "#/$defs/numberOrNull"},
+        "hydrothermal_temp_unit": {"$ref": "#/$defs/stringOrNull"},
+        "hydrothermal_time": {"$ref": "#/$defs/numberOrNull"},
+        "hydrothermal_time_unit": {"$ref": "#/$defs/stringOrNull"},
+        "drying_temp": {"$ref": "#/$defs/numberOrNull"},
+        "drying_temp_unit": {"$ref": "#/$defs/stringOrNull"},
+        "drying_time": {"$ref": "#/$defs/numberOrNull"},
+        "drying_time_unit": {"$ref": "#/$defs/stringOrNull"},
+        "synthesis_text": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "characterization": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bet_area": {"$ref": "#/$defs/numberOrNull"},
+        "bet_area_unit": {"$ref": "#/$defs/stringOrNull"},
+        "total_pore_volume": {"$ref": "#/$defs/numberOrNull"},
+        "total_pore_volume_unit": {"$ref": "#/$defs/stringOrNull"},
+        "micropore_volume": {"$ref": "#/$defs/numberOrNull"},
+        "micropore_volume_unit": {"$ref": "#/$defs/stringOrNull"},
+        "bronsted_acidity": {"$ref": "#/$defs/numberOrNull"},
+        "bronsted_acidity_unit": {"$ref": "#/$defs/stringOrNull"},
+        "lewis_acidity": {"$ref": "#/$defs/numberOrNull"},
+        "lewis_acidity_unit": {"$ref": "#/$defs/stringOrNull"},
+        "strong_acidity": {"$ref": "#/$defs/numberOrNull"},
+        "strong_acidity_unit": {"$ref": "#/$defs/stringOrNull"},
+        "weak_acidity": {"$ref": "#/$defs/numberOrNull"},
+        "weak_acidity_unit": {"$ref": "#/$defs/stringOrNull"},
+        "total_acidity": {"$ref": "#/$defs/numberOrNull"},
+        "total_acidity_unit": {"$ref": "#/$defs/stringOrNull"},
+        "characterization_text": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "reaction": {
+      "type": "object",
+      "required": [
+        "reaction_id",
+        "paper_id",
+        "catalyst_id",
+        "substrate",
+        "conditions",
+        "performance_metrics",
+        "source_type",
+        "evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reaction_id": {"$ref": "#/$defs/stringOrNull"},
+        "paper_id": {"$ref": "#/$defs/stringOrNull"},
+        "catalyst_id": {"$ref": "#/$defs/stringOrNull"},
+        "substrate": {"$ref": "#/$defs/substrate"},
+        "conditions": {"$ref": "#/$defs/conditions"},
+        "performance_metrics": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/performanceMetric"}
+        },
+        "source_type": {
+          "type": ["string", "null"],
+          "enum": ["table", "text", "caption", "mixed", "abstract", "unknown", null]
+        },
+        "evidence": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "substrate": {
+      "type": "object",
+      "required": [
+        "substrate_name",
+        "substrate_class",
+        "substrate_origin",
+        "is_polymeric"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "substrate_name": {"$ref": "#/$defs/stringOrNull"},
+        "substrate_class": {
+          "type": ["string", "null"],
+          "enum": [
+            "c5_sugar",
+            "c6_sugar",
+            "disaccharide",
+            "polysaccharide",
+            "real_biomass",
+            "mixed_sugar",
+            "others",
+            "unknown",
+            null
+          ]
+        },
+        "substrate_origin": {
+          "type": ["string", "null"],
+          "enum": ["model_compound", "biomass_derived_fraction", "raw_biomass", "others", "unknown", null]
+        },
+        "is_polymeric": {"type": ["boolean", "string", "null"], "enum": [true, false, "unknown", null]}
+      }
+    },
+    "conditions": {
+      "type": "object",
+      "required": [
+        "reaction_method",
+        "reaction_temperature",
+        "reaction_temperature_unit",
+        "reaction_time",
+        "reaction_time_unit",
+        "reaction_pressure",
+        "reaction_pressure_unit",
+        "reaction_atmosphere",
+        "substrate_mass",
+        "substrate_mass_unit",
+        "substrate_concentration",
+        "substrate_concentration_unit",
+        "catalyst_amount",
+        "catalyst_amount_unit",
+        "catalyst_loading",
+        "catalyst_loading_unit",
+        "catalyst_substrate_ratio",
+        "catalyst_substrate_ratio_source",
+        "solvent_name",
+        "solvent_volume",
+        "solvent_volume_unit",
+        "reactor_type",
+        "condition_text"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "reaction_method": {
+          "type": ["string", "null"],
+          "enum": [
+            "hydrothermal",
+            "batch",
+            "microwave",
+            "continuous_flow",
+            "fixed_bed",
+            "autoclave",
+            "reflux",
+            "solvothermal",
+            "mechanochemical",
+            "others",
+            "unknown",
+            null
+          ]
+        },
+        "reaction_temperature": {"$ref": "#/$defs/numberOrNull"},
+        "reaction_temperature_unit": {"$ref": "#/$defs/stringOrNull"},
+        "reaction_time": {"$ref": "#/$defs/numberOrNull"},
+        "reaction_time_unit": {"$ref": "#/$defs/stringOrNull"},
+        "reaction_pressure": {"type": ["number", "integer", "string", "null"]},
+        "reaction_pressure_unit": {"$ref": "#/$defs/stringOrNull"},
+        "reaction_atmosphere": {"$ref": "#/$defs/stringOrNull"},
+        "substrate_mass": {"$ref": "#/$defs/numberOrNull"},
+        "substrate_mass_unit": {"$ref": "#/$defs/stringOrNull"},
+        "substrate_concentration": {"$ref": "#/$defs/numberOrNull"},
+        "substrate_concentration_unit": {"$ref": "#/$defs/stringOrNull"},
+        "catalyst_amount": {"$ref": "#/$defs/numberOrNull"},
+        "catalyst_amount_unit": {"$ref": "#/$defs/stringOrNull"},
+        "catalyst_loading": {"$ref": "#/$defs/numberOrNull"},
+        "catalyst_loading_unit": {"$ref": "#/$defs/stringOrNull"},
+        "catalyst_substrate_ratio": {"$ref": "#/$defs/numberOrNull"},
+        "catalyst_substrate_ratio_source": {
+          "type": ["string", "null"],
+          "enum": ["extracted", "calculated", "none", "unknown", null]
+        },
+        "solvent_name": {"$ref": "#/$defs/stringOrNull"},
+        "solvent_volume": {"$ref": "#/$defs/numberOrNull"},
+        "solvent_volume_unit": {"$ref": "#/$defs/stringOrNull"},
+        "reactor_type": {"$ref": "#/$defs/stringOrNull"},
+        "condition_text": {"$ref": "#/$defs/stringOrNull"}
+      }
+    },
+    "performanceMetric": {
+      "type": "object",
+      "required": ["metric_name", "product_name", "value", "unit", "basis", "original_label", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "metric_name": {
+          "type": ["string", "null"],
+          "enum": ["conversion", "yield", "selectivity", "product_distribution", "unknown", null]
+        },
+        "product_name": {
+          "type": ["string", "null"],
+          "enum": [
+            "lactic_acid",
+            "hmf",
+            "furfural",
+            "levulinic_acid",
+            "formic_acid",
+            "acetic_acid",
+            "glycolic_acid",
+            "others",
+            "none",
+            "unknown",
+            null
+          ]
+        },
+        "value": {"$ref": "#/$defs/numberOrNull"},
+        "unit": {"$ref": "#/$defs/stringOrNull"},
+        "basis": {
+          "type": ["string", "null"],
+          "enum": ["carbon_basis", "molar_basis", "mass_basis", "substrate_basis", "unknown", null]
+        },
+        "original_label": {"$ref": "#/$defs/stringOrNull"},
+        "evidence": {"$ref": "#/$defs/stringOrNull"}
+      }
+    }
+  }
+}

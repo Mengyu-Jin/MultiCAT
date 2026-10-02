@@ -1,0 +1,12 @@
+# ── Environment & secrets ─────────────────────────────────────────────────────
+.env
+.venv/
+
+# ── Python build artifacts ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+dist/
+build/

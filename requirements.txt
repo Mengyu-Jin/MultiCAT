@@ -1,0 +1,4 @@
+requests>=2.31
+PyYAML>=6.0
+jsonschema>=4.20
+pytest>=7.4

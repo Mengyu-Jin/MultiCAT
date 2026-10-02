@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MultiCat Screening Output",
+  "type": "object",
+  "required": ["decision", "reason"],
+  "additionalProperties": false,
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": ["keep", "skip"]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "figure_labels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["wanted", "not_wanted"]
+      }
+    }
+  }
+}
+
